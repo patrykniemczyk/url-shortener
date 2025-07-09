@@ -53,6 +53,11 @@ export default function Form() {
     let code = formData.get("suffix")?.toString();
     if (!code) code = randomPlaceholder;
     formData.set("suffix", code);
+    let url = formData.get("longurl")?.toString() || "";
+    if (url && !/^https?:\/\//i.test(url)) {
+      url = "https://" + url;
+      formData.set("longurl", url);
+    }
     setButtonState({
       text: "checking...",
       icon: <Zap className="w-4 h-4 mr-2 animate-spin" />,
@@ -135,7 +140,7 @@ export default function Form() {
             <Input
               id="longurl"
               name="longurl"
-              type="url"
+              type="text"
               placeholder="https://example.com/very/long/url/that/needs/shortening"
               value={longurl}
               onChange={(e) => setLongurl(e.target.value)}
