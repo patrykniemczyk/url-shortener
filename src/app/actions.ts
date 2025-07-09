@@ -1,15 +1,15 @@
+"use server";
+
 import { neon } from "@neondatabase/serverless";
 
 export async function checkIfCodeExists(formData: FormData) {
-  "use server";
-
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error("DATABASE_URL environment variable is not set");
   }
 
   const sql = neon(databaseUrl);
-  const code = formData.get("code");
+  const code = formData.get("suffix");
 
   const result = await sql`SELECT * FROM urls WHERE code = ${code}`;
   if (result.length > 0) {
@@ -20,8 +20,6 @@ export async function checkIfCodeExists(formData: FormData) {
 }
 
 export async function insertUrl(formData: FormData) {
-  "use server";
-
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error("DATABASE_URL environment variable is not set");
@@ -29,7 +27,7 @@ export async function insertUrl(formData: FormData) {
 
   const sql = neon(databaseUrl);
   const longurl = formData.get("longurl");
-  const code = formData.get("code");
+  const code = formData.get("suffix");
 
   const existing = await sql`SELECT 1 FROM urls WHERE code = ${code}`;
   if (existing.length > 0) {
@@ -40,8 +38,6 @@ export async function insertUrl(formData: FormData) {
 }
 
 export async function getUrlFromCode(code: string) {
-  "use server";
-
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error("DATABASE_URL environment variable is not set");
