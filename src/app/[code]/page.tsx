@@ -1,15 +1,19 @@
 import { getUrlFromCode } from "@/app/actions";
 import { redirect } from "next/navigation";
 
-export default async function RedirectPage({
+export default async function Page({
   params,
 }: {
-  params: { code: string };
+  params: Promise<{ code: string }>;
 }) {
-  const url = await getUrlFromCode(params.code);
+  const { code } = await params;
+
+  const url = await getUrlFromCode(code);
+
   if (url) {
     redirect(url);
   }
+
   return (
     <main className="flex min-h-screen items-center justify-center">
       <div className="text-center">
